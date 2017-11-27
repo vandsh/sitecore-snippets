@@ -1,0 +1,13 @@
+<Project>
+	...
+  <Import Project="$(MSBuildExtensionsPath)\HedgehogDevelopment\SitecoreProject\v9.0\HedgehogDevelopment.SitecoreProject.targets" />
+  <Target Name="BeforeFileReplacements">
+    <!-- restore certain Sitecore.* DLLs that TDS does not copy -->
+    <!-- BeforeFileReplacements will be called after TDS has deleted Sitecore.* from its Output, but before it deploys -->
+    <!-- Let's try a wildcard with the SharedSource piece, time to whitelist! -->
+    <ItemGroup>
+      <DeploySitecoreBinaries Include="$(SourceWebPhysicalPath)\Bin\Sitecore.SharedSource.*.dll;" />
+    </ItemGroup>
+    <Copy SourceFiles="@(DeploySitecoreBinaries)" DestinationFiles="@(DeploySitecoreBinaries->'$(_OutputPath)bin\%(RecursiveDir)%(FileName)%(Extension)')" />
+  </Target>
+</Project>
